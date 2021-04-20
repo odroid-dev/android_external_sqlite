@@ -1,6 +1,6 @@
 diff -r -u -d orig/shell.c ./shell.c
---- orig/shell.c	2021-04-02 17:40:15.000000000 +0200
-+++ ./shell.c	2021-04-05 10:58:15.523897373 +0200
+--- orig/shell.c	2021-04-19 20:56:33.000000000 +0200
++++ ./shell.c	2021-04-20 12:16:00.019009051 +0200
 @@ -95,6 +95,12 @@
  #endif
  #include <ctype.h>
@@ -39,8 +39,8 @@ diff -r -u -d orig/shell.c ./shell.c
        char *zSql = sqlite3_mprintf(
           "CREATE VIRTUAL TABLE zip USING zipfile(%Q);", p->zDbFilename);
 diff -r -u -d orig/sqlite3.c ./sqlite3.c
---- orig/sqlite3.c	2021-04-02 17:40:15.000000000 +0200
-+++ ./sqlite3.c	2021-04-05 10:58:15.543897475 +0200
+--- orig/sqlite3.c	2021-04-19 20:56:33.000000000 +0200
++++ ./sqlite3.c	2021-04-20 12:16:00.039009116 +0200
 @@ -37701,7 +37701,7 @@
    SimulateIOError( rc=1 );
    if( rc!=0 ){
@@ -111,7 +111,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    /* pPager->pFirst = 0; */
    /* pPager->pFirstSynced = 0; */
    /* pPager->pLast = 0; */
-@@ -110895,7 +110882,7 @@
+@@ -110906,7 +110893,7 @@
  #endif
      sqlite3BtreeLeave(pNew->pBt);
    }
@@ -120,7 +120,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    if( rc==SQLITE_OK && pNew->zDbSName==0 ){
      rc = SQLITE_NOMEM_BKPT;
    }
-@@ -130467,7 +130454,7 @@
+@@ -130478,7 +130465,7 @@
    }
    if( pDb->pSchema->file_format>SQLITE_MAX_FILE_FORMAT ){
      sqlite3SetString(pzErrMsg, db, "unsupported file format");
@@ -129,7 +129,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
      goto initone_error_out;
    }
  
-@@ -167370,7 +167357,7 @@
+@@ -167382,7 +167369,7 @@
    ** database it is OFF. This matches the pager layer defaults.
    */
    db->aDb[0].zDbSName = "main";
@@ -138,7 +138,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    db->aDb[1].zDbSName = "temp";
    db->aDb[1].safety_level = PAGER_SYNCHRONOUS_OFF;
  
-@@ -174092,13 +174079,25 @@
+@@ -174104,13 +174091,25 @@
    ** module with sqlite.
    */
    if( SQLITE_OK==rc
