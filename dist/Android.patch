@@ -1,6 +1,6 @@
 diff -r -u -d orig/shell.c ./shell.c
---- orig/shell.c	2022-03-26 15:21:25.000000000 +0100
-+++ ./shell.c	2022-03-30 13:55:46.297176462 +0200
+--- orig/shell.c	2022-07-21 18:02:15.000000000 +0200
++++ ./shell.c	2022-07-28 16:23:44.631017070 +0200
 @@ -107,6 +107,12 @@
  #endif
  #include <ctype.h>
@@ -14,7 +14,7 @@ diff -r -u -d orig/shell.c ./shell.c
  
  #if !defined(_WIN32) && !defined(WIN32)
  # include <signal.h>
-@@ -16104,6 +16110,23 @@
+@@ -16177,6 +16183,23 @@
      sqlite3_create_function(p->db, "edit", 2, SQLITE_UTF8, 0,
                              editFunc, 0, 0);
  #endif
@@ -39,9 +39,9 @@ diff -r -u -d orig/shell.c ./shell.c
        char *zSql = sqlite3_mprintf(
           "CREATE VIRTUAL TABLE zip USING zipfile(%Q);", zDbFilename);
 diff -r -u -d orig/sqlite3.c ./sqlite3.c
---- orig/sqlite3.c	2022-03-26 15:21:25.000000000 +0100
-+++ ./sqlite3.c	2022-03-30 13:55:46.317176646 +0200
-@@ -38621,7 +38621,7 @@
+--- orig/sqlite3.c	2022-07-21 18:02:15.000000000 +0200
++++ ./sqlite3.c	2022-07-28 16:23:44.651017304 +0200
+@@ -39305,7 +39305,7 @@
    SimulateIOError( rc=1 );
    if( rc!=0 ){
      storeLastErrno((unixFile*)id, errno);
@@ -50,7 +50,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    }
    *pSize = buf.st_size;
  
-@@ -38657,7 +38657,7 @@
+@@ -39341,7 +39341,7 @@
      struct stat buf;              /* Used to hold return values of fstat() */
  
      if( osFstat(pFile->h, &buf) ){
@@ -59,7 +59,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
      }
  
      nSize = ((nByte+pFile->szChunk-1) / pFile->szChunk) * pFile->szChunk;
-@@ -39399,7 +39399,7 @@
+@@ -40083,7 +40083,7 @@
      ** with the same permissions.
      */
      if( osFstat(pDbFd->h, &sStat) ){
@@ -68,7 +68,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
        goto shm_open_err;
      }
  
-@@ -56775,15 +56775,9 @@
+@@ -57417,15 +57417,9 @@
    unsigned pgFlags      /* Various flags */
  ){
    unsigned level = pgFlags & PAGER_SYNCHRONOUS_MASK;
@@ -87,7 +87,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    if( pPager->noSync ){
      pPager->syncFlags = 0;
    }else if( pgFlags & PAGER_FULLFSYNC ){
-@@ -58209,18 +58203,11 @@
+@@ -58852,18 +58846,11 @@
    pPager->memDb = (u8)memDb;
    pPager->readOnly = (u8)readOnly;
    assert( useJournal || pPager->tempFile );
@@ -111,7 +111,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    /* pPager->pFirst = 0; */
    /* pPager->pFirstSynced = 0; */
    /* pPager->pLast = 0; */
-@@ -113217,7 +113204,7 @@
+@@ -114435,7 +114422,7 @@
  #endif
      sqlite3BtreeLeave(pNew->pBt);
    }
@@ -120,7 +120,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    if( rc==SQLITE_OK && pNew->zDbSName==0 ){
      rc = SQLITE_NOMEM_BKPT;
    }
-@@ -133505,7 +133492,7 @@
+@@ -134802,7 +134789,7 @@
    }
    if( pDb->pSchema->file_format>SQLITE_MAX_FILE_FORMAT ){
      sqlite3SetString(pzErrMsg, db, "unsupported file format");
@@ -129,7 +129,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
      goto initone_error_out;
    }
  
-@@ -171875,7 +171862,7 @@
+@@ -174004,7 +173991,7 @@
    ** database it is OFF. This matches the pager layer defaults.
    */
    db->aDb[0].zDbSName = "main";
@@ -138,7 +138,7 @@ diff -r -u -d orig/sqlite3.c ./sqlite3.c
    db->aDb[1].zDbSName = "temp";
    db->aDb[1].safety_level = PAGER_SYNCHRONOUS_OFF;
  
-@@ -178684,13 +178671,25 @@
+@@ -180855,13 +180842,25 @@
    ** module with sqlite.
    */
    if( SQLITE_OK==rc
